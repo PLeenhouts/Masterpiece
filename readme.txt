@@ -1,3 +1,5 @@
+Repository voor Webdesign Module Masterpiece
+
 Installeren bestanden:
 Maak een map aan waarin alle bestanden komen te staan
 Open deze map in Virtual Code Studio
