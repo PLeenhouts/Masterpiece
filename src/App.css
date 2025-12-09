@@ -16,3 +16,7 @@
   max-height: 300px;
   object-fit: cover;
  }
+
+ .detail-image {
+  max-height: 450px;
+  }
