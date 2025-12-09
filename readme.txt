@@ -12,6 +12,11 @@ Nu worden react en dergelijke in de map geïnstalleerd
 De server zal ook automatisch worden gestart
 Wanneer dit is gebeurd, kan deze worden geopend via de link: http://localhost:5173/
 
+Installeren React router:
+Open een terminal. Controleer of het pad goed staat
+Geef het volgende commando in: npm install react-router-dom
+Nu wordt React Router in de map geïstalleerd
+
 Zelf opstarten: 
 Geef in de terminal waar de bestanden instaan het commando: npm run dev
 In de terminal zal worden weergegeven dat de server wordt opgestart
