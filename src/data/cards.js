@@ -17,7 +17,7 @@ export const initialCards = [
     rank: "Dark Jedi",
     deploy: "6",
     forfeit: "8",
-    destiny: "1",
+    destiny: [1],
      },
   {
     id: "Card 2",
@@ -37,7 +37,7 @@ export const initialCards = [
     rank: "Force-attuned",
     deploy: "4",
     forfeit: "6",
-    destiny: "1",
+    destiny: [1],
      },
   {
     id: "Card 3",
@@ -57,7 +57,7 @@ export const initialCards = [
     rank: "Force-attuned",
     deploy: "3",
     forfeit: "6",
-    destiny: "1",
+    destiny: [1],
      },     
   {
     id: "Card 4",
@@ -77,7 +77,7 @@ export const initialCards = [
     rank: "Force-sensitive",
     deploy: "3",
     forfeit: "7",
-    destiny: "1",
+    destiny: [1],
      },
   {
     id: "Card 5",
@@ -97,7 +97,7 @@ export const initialCards = [
     rank: "",
     deploy: "2",
     forfeit: "3",
-    destiny: "3",
+    destiny: [3],
      },
   {
     id: "Card 6",
@@ -117,7 +117,7 @@ export const initialCards = [
     rank: "",
     deploy: "1",
     forfeit: "2",
-    destiny: "2",
+    destiny: [2],
      },
   {
     id: "Card 7",
@@ -137,7 +137,7 @@ export const initialCards = [
     rank: "",
     deploy: "4",
     forfeit: "6",
-    destiny: "1",
+    destiny: [1],
      },      
   {
     id: "Card 8",
@@ -157,7 +157,7 @@ export const initialCards = [
     rank: "",
     deploy: "2",
     forfeit: "6",
-    destiny: "4",
+    destiny: [4],
      },
   {
     id: "Card 9",
@@ -177,7 +177,7 @@ export const initialCards = [
     rank: "",
     deploy: "0",
     forfeit: "4",
-    destiny: "0",
+    destiny: [0],
      },
   {
     id: "Card 10",
@@ -197,7 +197,7 @@ export const initialCards = [
     rank: "Force-attuned",
     deploy: "3",
     forfeit: "5",
-    destiny: "1",
+    destiny: [1],
      },
   {
     id: "Card 11",
@@ -217,7 +217,7 @@ export const initialCards = [
     rank: "",
     deploy: "2",
     forfeit: "5",
-    destiny: "2",
+    destiny: [2],
      },       
   {
     id: "Card 12",
@@ -237,7 +237,7 @@ export const initialCards = [
     rank: "",
     deploy: "2",
     forfeit: "4",
-    destiny: "2",
+    destiny: [2],
      },
  {
     id: "Card 13",
@@ -257,7 +257,7 @@ export const initialCards = [
     rank: "",
     deploy: "4",
     forfeit: "3",
-    destiny: "1",
+    destiny: [1],
      },
   {
     id: "Card 14",
@@ -277,7 +277,7 @@ export const initialCards = [
     rank: "Force-attuned",
     deploy: "3",
     forfeit: "5",
-    destiny: "1",
+    destiny: [1],
      },
   {
     id: "Card 15",
@@ -297,7 +297,7 @@ export const initialCards = [
     rank: "Force-Sensitive",
     deploy: "5",
     forfeit: "8",
-    destiny: "1",
+    destiny: [1],
      },       
   {
     id: "Card 16",
@@ -317,7 +317,7 @@ export const initialCards = [
     rank: "Jedi Master",
     deploy: "5",
     forfeit: "9",
-    destiny: "1",
+    destiny: [1],
      },
  {
     id: "Card 17",
@@ -334,10 +334,10 @@ export const initialCards = [
     roles: ["Warrior", "Pilot"],
     power: "4",
     ability: "3",
-    rank: "armor 5",
+    armor: "5",
     deploy: "5",
     forfeit: "6",
-    destiny: "1",
+    destiny: [1],
      },
   {
     id: "Card 18",
@@ -357,7 +357,7 @@ export const initialCards = [
     rank: "Force-attuned",
     deploy: "2",
     forfeit: "3",
-    destiny: "1",
+    destiny: [1],
      },
   {
     id: "Card 19",
@@ -377,7 +377,7 @@ export const initialCards = [
     rank: "",
     deploy: "2",
     forfeit: "5",
-    destiny: "1",
+    destiny: [1],
      },       
   {
     id: "Card 20",
@@ -397,7 +397,7 @@ export const initialCards = [
     rank: "Force-Sensitive",
     deploy: "4",
     forfeit: "7",
-    destiny: "1",
+    destiny: [1],
      },
  {
     id: "Card 21",
@@ -417,7 +417,7 @@ export const initialCards = [
     rank: "Force-Sensitive",
     deploy: "6",
     forfeit: "7",
-    destiny: "1",
+    destiny: [1],
      },
   {
     id: "Card 22",
@@ -437,7 +437,7 @@ export const initialCards = [
     rank: "",
     deploy: "1",
     forfeit: "3",
-    destiny: "3",
+    destiny: [3],
      },
   {
     id: "Card 23",
@@ -457,7 +457,7 @@ export const initialCards = [
     rank: "",
     deploy: "3",
     forfeit: "2",
-    destiny: "2",
+    destiny: [2],
      },     
   {
     id: "Card 24",
@@ -477,7 +477,7 @@ export const initialCards = [
     rank: "",
     deploy: "2",
     forfeit: "3",
-    destiny: "3",
+    destiny: [3],
      },
  {
     id: "Card 25",
@@ -497,7 +497,7 @@ export const initialCards = [
     rank: "",
     deploy: "2",
     forfeit: "3",
-    destiny: "3",
+    destiny: [3],
      },
   {
     id: "Card 26",
@@ -517,7 +517,7 @@ export const initialCards = [
     rank: "",
     deploy: "2",
     forfeit: "3",
-    destiny: "2",
+    destiny: [2],
      },
   {
     id: "Card 27",
@@ -537,7 +537,7 @@ export const initialCards = [
     rank: "Force-Attuned",
     deploy: "5",
     forfeit: "8",
-    destiny: "1",
+    destiny: [1],
      },     
   {
     id: "Card 28",
@@ -557,7 +557,7 @@ export const initialCards = [
     rank: "",
     deploy: "3",
     forfeit: "2",
-    destiny: "3",
+    destiny: [3],
      },
  {
     id: "Card 29",
@@ -577,7 +577,7 @@ export const initialCards = [
     rank: "Force-Attuned",
     deploy: "3",
     forfeit: "5",
-    destiny: "1",
+    destiny: [1],
      },
   {
     id: "Card 30",
@@ -597,13 +597,13 @@ export const initialCards = [
     rank: "Dark Jedi Master",
     deploy: "5",
     forfeit: "9",
-    destiny: "6",
+    destiny: [6],
      },
   {
     id: "Card 31",
     serie: "Death Star II",
     side: "Light",
-    title: "AdmiraL Ackbar",
+    title: "Admiral Ackbar",
     type: "Character",
     role: "Rebel",
     rarity: "R",
@@ -617,7 +617,7 @@ export const initialCards = [
     rank: "Force-Attuned",
     deploy: "4",
     forfeit: "7",
-    destiny: "1",
+    destiny: [1],
      },     
   {
     id: "Card 32",
@@ -637,6 +637,6 @@ export const initialCards = [
     rank: "",
     deploy: "2",
     forfeit: "4",
-    destiny: "2",
+    destiny: [2],
      },
 ];
