@@ -20,6 +20,7 @@ function App() {
     <Routes>
       <Route path="/" element={<GalleryHome cards={cards} onToggleFavorite={handleToggleFavorite} />} />
       <Route path="/card/:id" element={<CardDetailPage cards={cards} onToggleFavorite={handleToggleFavorite} />} />
+      <Route path="/favorites" element={<FavoritesPage cards={cards} onToggleFavorite={handleToggleFavorite} />} />  
     </Routes>
   );
 }
@@ -110,6 +111,10 @@ const statMatch = term.match(
     <div>
       <h1>Holocron-Archives</h1>
       <p>Kaartoverzicht.</p>
+
+      <p>
+        <Link to="/favorites">Bekijk favorieten</Link>
+      </p>
 
       <input
         type="text"
@@ -208,6 +213,7 @@ function CardDetailPage({ cards, onToggleFavorite }) {
     <div>
       <p>
         <Link to="/">Terug naar overzicht</Link>
+        <Link to="/favorites">Naar favorieten</Link>
       </p>
 
       <img src={card.image} alt={card.title} className="detail-image" />
@@ -235,6 +241,43 @@ function CardDetailPage({ cards, onToggleFavorite }) {
       className={`heart-button ${card.isFavorite ? "favorited" : ""}`}>
       ♥ 
     </button>
+    </div>
+  );
+}
+
+// Favorietenpagina
+function FavoritesPage({ cards, onToggleFavorite }) {
+    const favoriteCards = cards.filter((card) => card.isFavorite);
+
+  return (
+    <div>
+      <h1>Favorieten</h1>
+      <p>Overzicht van alle favoriete kaarten.</p>
+
+      <p>
+        <Link to="/">Terug naar overzicht</Link>
+      </p>
+
+      {favoriteCards.length === 0 && (
+        <p>Je hebt nog geen favorieten geselecteerd.</p>
+      )}
+
+      <div className="card-grid">
+        {favoriteCards.map((card) => (
+          <div className="card" key={card.id}>
+            <Link to={`/card/${card.id}`}>
+              <img src={card.image} alt={card.title} />
+            </Link>
+
+            <h2>{card.title}</h2>
+
+       <button onClick={() => onToggleFavorite(card.id, card.isFavorite)}
+        className={`heart-button ${card.isFavorite ? "favorited" : ""}`}>
+        ♥ 
+       </button>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
