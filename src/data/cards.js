@@ -18,6 +18,7 @@ export const initialCards = [
     deploy: "6",
     forfeit: "8",
     destiny: [1],
+    isFavorite: false,
      },
   {
     id: "Card 2",
@@ -38,6 +39,7 @@ export const initialCards = [
     deploy: "4",
     forfeit: "6",
     destiny: [1],
+    isFavorite: false,
      },
   {
     id: "Card 3",
@@ -58,6 +60,7 @@ export const initialCards = [
     deploy: "3",
     forfeit: "6",
     destiny: [1],
+    isFavorite: false,
      },     
   {
     id: "Card 4",
@@ -78,6 +81,7 @@ export const initialCards = [
     deploy: "3",
     forfeit: "7",
     destiny: [1],
+    isFavorite: false,
      },
   {
     id: "Card 5",
@@ -98,6 +102,7 @@ export const initialCards = [
     deploy: "2",
     forfeit: "3",
     destiny: [3],
+    isFavorite: false,
      },
   {
     id: "Card 6",
@@ -118,6 +123,7 @@ export const initialCards = [
     deploy: "1",
     forfeit: "2",
     destiny: [2],
+    isFavorite: false,
      },
   {
     id: "Card 7",
@@ -138,6 +144,7 @@ export const initialCards = [
     deploy: "4",
     forfeit: "6",
     destiny: [1],
+    isFavorite: false,
      },      
   {
     id: "Card 8",
@@ -158,6 +165,7 @@ export const initialCards = [
     deploy: "2",
     forfeit: "6",
     destiny: [4],
+    isFavorite: false,
      },
   {
     id: "Card 9",
@@ -178,6 +186,7 @@ export const initialCards = [
     deploy: "0",
     forfeit: "4",
     destiny: [0],
+    isFavorite: false,
      },
   {
     id: "Card 10",
@@ -198,6 +207,7 @@ export const initialCards = [
     deploy: "3",
     forfeit: "5",
     destiny: [1],
+    isFavorite: false,
      },
   {
     id: "Card 11",
@@ -218,6 +228,7 @@ export const initialCards = [
     deploy: "2",
     forfeit: "5",
     destiny: [2],
+    isFavorite: false,
      },       
   {
     id: "Card 12",
@@ -238,6 +249,7 @@ export const initialCards = [
     deploy: "2",
     forfeit: "4",
     destiny: [2],
+    isFavorite: false,
      },
  {
     id: "Card 13",
@@ -258,6 +270,7 @@ export const initialCards = [
     deploy: "4",
     forfeit: "3",
     destiny: [1],
+    isFavorite: false,
      },
   {
     id: "Card 14",
@@ -278,6 +291,7 @@ export const initialCards = [
     deploy: "3",
     forfeit: "5",
     destiny: [1],
+    isFavorite: false,
      },
   {
     id: "Card 15",
@@ -298,6 +312,7 @@ export const initialCards = [
     deploy: "5",
     forfeit: "8",
     destiny: [1],
+    isFavorite: false,
      },       
   {
     id: "Card 16",
@@ -318,6 +333,7 @@ export const initialCards = [
     deploy: "5",
     forfeit: "9",
     destiny: [1],
+    isFavorite: false,
      },
  {
     id: "Card 17",
@@ -338,6 +354,7 @@ export const initialCards = [
     deploy: "5",
     forfeit: "6",
     destiny: [1],
+    isFavorite: false,
      },
   {
     id: "Card 18",
@@ -358,6 +375,7 @@ export const initialCards = [
     deploy: "2",
     forfeit: "3",
     destiny: [1],
+    isFavorite: false,
      },
   {
     id: "Card 19",
@@ -378,6 +396,7 @@ export const initialCards = [
     deploy: "2",
     forfeit: "5",
     destiny: [1],
+    isFavorite: false,
      },       
   {
     id: "Card 20",
@@ -398,6 +417,7 @@ export const initialCards = [
     deploy: "4",
     forfeit: "7",
     destiny: [1],
+    isFavorite: false,
      },
  {
     id: "Card 21",
@@ -418,6 +438,7 @@ export const initialCards = [
     deploy: "6",
     forfeit: "7",
     destiny: [1],
+    isFavorite: false,
      },
   {
     id: "Card 22",
@@ -438,6 +459,7 @@ export const initialCards = [
     deploy: "1",
     forfeit: "3",
     destiny: [3],
+    isFavorite: false,
      },
   {
     id: "Card 23",
@@ -458,6 +480,7 @@ export const initialCards = [
     deploy: "3",
     forfeit: "2",
     destiny: [2],
+    isFavorite: false,
      },     
   {
     id: "Card 24",
@@ -478,6 +501,7 @@ export const initialCards = [
     deploy: "2",
     forfeit: "3",
     destiny: [3],
+    isFavorite: false,
      },
  {
     id: "Card 25",
@@ -498,6 +522,7 @@ export const initialCards = [
     deploy: "2",
     forfeit: "3",
     destiny: [3],
+    isFavorite: false,
      },
   {
     id: "Card 26",
@@ -518,6 +543,7 @@ export const initialCards = [
     deploy: "2",
     forfeit: "3",
     destiny: [2],
+    isFavorite: false,
      },
   {
     id: "Card 27",
@@ -538,6 +564,7 @@ export const initialCards = [
     deploy: "5",
     forfeit: "8",
     destiny: [1],
+    isFavorite: false,
      },     
   {
     id: "Card 28",
@@ -558,6 +585,7 @@ export const initialCards = [
     deploy: "3",
     forfeit: "2",
     destiny: [3],
+    isFavorite: false,
      },
  {
     id: "Card 29",
@@ -578,6 +606,7 @@ export const initialCards = [
     deploy: "3",
     forfeit: "5",
     destiny: [1],
+    isFavorite: false,
      },
   {
     id: "Card 30",
@@ -598,6 +627,7 @@ export const initialCards = [
     deploy: "5",
     forfeit: "9",
     destiny: [6],
+    isFavorite: false,
      },
   {
     id: "Card 31",
@@ -618,6 +648,7 @@ export const initialCards = [
     deploy: "4",
     forfeit: "7",
     destiny: [1],
+    isFavorite: false,
      },     
   {
     id: "Card 32",
@@ -638,5 +669,6 @@ export const initialCards = [
     deploy: "2",
     forfeit: "4",
     destiny: [2],
+    isFavorite: false,
      },
 ];
