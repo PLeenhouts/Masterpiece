@@ -18,13 +18,75 @@ export default App;
 
 // Overzichtspagina
 function GalleryHome({ cards }) {
+  const [searchTerm, setSearchTerm] = useState("");
+  const filteredCards = cards.filter((card) => {
+    const term = searchTerm.toLowerCase().trim();
+    if (!term) return true;
+
+    const statMatch = term.match(
+      /^(power|ability|armor|deploy|forfeit|destiny)\s+(.+)$/
+    );
+
+if (statMatch) {
+      const field = statMatch[1];
+      const value = statMatch[2];
+      if (field === "destiny") {        
+        if (Array.isArray(card.destiny)) {
+          return card.destiny.some(
+            (d) => String(d).toLowerCase() === value
+          );
+        }
+        if (card.destiny !== undefined) {
+          return String(card.destiny).toLowerCase() === value;
+        }
+        return false;
+      } else {
+        const statValue = card[field];
+        if (statValue === undefined) return false;
+        return String(statValue).toLowerCase() === value;
+      }
+    }
+
+    const title = (card.title || "").toLowerCase();
+    const type = (card.type || "").toLowerCase();
+    const series = (card.series || "").toLowerCase();
+    const side = (card.side || "").toLowerCase();
+    const rarity = (card.rarity || "").toLowerCase();
+    const rank = (card.rank || "").toLowerCase();
+    const rolesText = Array.isArray(card.roles)
+      ? card.roles
+          .filter((r) => typeof r === "string")
+          .join(" ")
+          .toLowerCase()
+      : "";
+
+    const destinyText = Array.isArray(card.destiny)
+      ? card.destiny.join(" ").toLowerCase()
+      : (card.destiny !== undefined ? String(card.destiny).toLowerCase() : "");
+
+    const power = card.power !== undefined ? String(card.power) : "";
+    const ability = card.ability !== undefined ? String(card.ability) : "";
+    const armor = card.armor !== undefined ? String(card.armor) : "";
+    const deploy = card.deploy !== undefined ? String(card.deploy) : "";
+    const forfeit = card.forfeit !== undefined ? String(card.forfeit) : "";
+    const haystack = [title, type, series, side, rarity, rank, rolesText, destinyText, power, ability, armor, deploy, forfeit,].join(" ");
+    return haystack.includes(term);
+  });
+
    return (
     <div>
       <h1>Holocron-Archives</h1>
       <p>Kaartoverzicht.</p>
       
+     	 <input
+       	 type="text"
+       	 placeholder="Zoek op titel of bijv. 'power 5'"
+       	 value={searchTerm}
+       	 onChange={(e) => setSearchTerm(e.target.value)}
+     	 />
+
       <div className="card-grid">
-       {cards.map((card) => (
+       {filteredCards.map((card) => (
           <div className="card" key={card.id}>
             <Link to={`/card/${card.id}`}>
             <img src={card.image} alt={card.title} />
