@@ -33,3 +33,16 @@ color: black;
 .heart-button.favorited {
 color: red;
 }
+
+/* Rating styling */
+.rating .star {
+background: none;
+border: none;
+cursor: pointer;
+font-size: 1.8rem;
+color: black;
+}
+
+.rating .star.filled {
+color: gold;
+}
