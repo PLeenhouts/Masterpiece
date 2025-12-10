@@ -19,18 +19,39 @@ export default App;
 // Overzichtspagina
 function GalleryHome({ cards }) {
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedSeries, setSelectedSeries] = useState([]);
+  const [selectedSides, setSelectedSides] = useState([]);
+  const [selectedTypes, setSelectedTypes] = useState([]);
+  const seriesOptions = [...new Set(cards.map((c) => c.serie).filter(Boolean))];
+  const sideOptions = [...new Set(cards.map((c) => c.side).filter(Boolean))];
+  const typeOptions = [...new Set(cards.map((c) => c.type).filter(Boolean))];
+
+  const toggleInArray = (value, setter) => {
+    setter((prev) =>
+      prev.includes(value)
+        ? prev.filter((v) => v !== value)
+        : [...prev, value]
+    );
+  };
+
   const filteredCards = cards.filter((card) => {
     const term = searchTerm.toLowerCase().trim();
+    if (selectedSeries.length > 0 && !selectedSeries.includes(card.serie)) {
+      return false;}
+    if (selectedSides.length > 0 && !selectedSides.includes(card.side)) {
+      return false;}
+    if (selectedTypes.length > 0 && !selectedTypes.includes(card.type)) {
+      return false;}
     if (!term) return true;
 
-    const statMatch = term.match(
+const statMatch = term.match(
       /^(power|ability|armor|deploy|forfeit|destiny)\s+(.+)$/
     );
 
-if (statMatch) {
-      const field = statMatch[1];
+    if (statMatch) {
+      const field = statMatch[1]
       const value = statMatch[2];
-      if (field === "destiny") {        
+      if (field === "destiny") {    
         if (Array.isArray(card.destiny)) {
           return card.destiny.some(
             (d) => String(d).toLowerCase() === value
@@ -62,7 +83,9 @@ if (statMatch) {
 
     const destinyText = Array.isArray(card.destiny)
       ? card.destiny.join(" ").toLowerCase()
-      : (card.destiny !== undefined ? String(card.destiny).toLowerCase() : "");
+      : card.destiny !== undefined
+      ? String(card.destiny).toLowerCase()
+      : "";
 
     const power = card.power !== undefined ? String(card.power) : "";
     const ability = card.ability !== undefined ? String(card.ability) : "";
@@ -73,36 +96,77 @@ if (statMatch) {
     return haystack.includes(term);
   });
 
-   return (
+  return (
     <div>
       <h1>Holocron-Archives</h1>
       <p>Kaartoverzicht.</p>
-      
-     	 <input
-       	 type="text"
-       	 placeholder="Zoek op titel of bijv. 'power 5'"
-       	 value={searchTerm}
-       	 onChange={(e) => setSearchTerm(e.target.value)}
-     	 />
+
+      <input
+        type="text"
+        placeholder="Zoek op titel of bijv. 'power 5'"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+
+      <div className="filters">
+        <fieldset>
+          <legend>Serie</legend>
+          {seriesOptions.map((s) => (
+            <label key={s}>
+              <input type="checkbox"
+                checked={selectedSeries.includes(s)}
+                onChange={() => toggleInArray(s, setSelectedSeries)}
+              />
+              {s}
+            </label>
+          ))}
+        </fieldset>
+
+        <fieldset>
+          <legend>Side</legend>
+          {sideOptions.map((s) => (
+            <label key={s}>
+              <input
+                type="checkbox"
+                checked={selectedSides.includes(s)}
+                onChange={() => toggleInArray(s, setSelectedSides)}
+              />
+              {s}
+            </label>
+          ))}
+        </fieldset>
+
+        <fieldset>
+          <legend>Type</legend>
+          {typeOptions.map((t) => (
+            <label key={t}>
+              <input
+                type="checkbox"
+                checked={selectedTypes.includes(t)}
+                onChange={() => toggleInArray(t, setSelectedTypes)}
+              />
+              {t}
+            </label>
+          ))}
+        </fieldset>
+      </div>
 
       <div className="card-grid">
-       {filteredCards.map((card) => (
+        {filteredCards.map((card) => (
           <div className="card" key={card.id}>
             <Link to={`/card/${card.id}`}>
-            <img src={card.image} alt={card.title} />
-            </Link> 
-          
-            
+              <img src={card.image} alt={card.title} />
+            </Link>
             <h2>{card.title}</h2>
             <p>
               <Link to={`/card/${card.id}`}>Bekijk kaart</Link>
             </p>
-            </div>
+          </div>
         ))}
       </div>
     </div>
   );
-}          
+}
 
 // Detailpagina
 function CardDetailPage({ cards }) {
