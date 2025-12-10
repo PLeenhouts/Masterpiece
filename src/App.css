@@ -20,3 +20,16 @@
  .detail-image {
   max-height: 450px;
   }
+
+/* Hart-knop styling */
+.heart-button {
+background: none;
+border: none;
+cursor: pointer;
+font-size: 1.8rem;
+color: black;
+}
+
+.heart-button.favorited {
+color: red;
+}

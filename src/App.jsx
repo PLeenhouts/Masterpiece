@@ -4,12 +4,22 @@ import { initialCards } from "./data/cards.js";
 import './App.css'
 
 function App() {
-  const [cards] = useState(initialCards);
+  const [cards, setCards] = useState(initialCards);
+
+  function handleToggleFavorite(id) {
+    setCards((prevCards) =>
+      prevCards.map((card) =>
+        card.id === id ? { ...card, isFavorite: !card.isFavorite } 
+        : card
+      )
+    );
+  }
+
 
     return (
     <Routes>
-      <Route path="/" element={<GalleryHome cards={cards} />} />
-      <Route path="/card/:id" element={<CardDetailPage cards={cards} />} />
+      <Route path="/" element={<GalleryHome cards={cards} onToggleFavorite={handleToggleFavorite} />} />
+      <Route path="/card/:id" element={<CardDetailPage cards={cards} onToggleFavorite={handleToggleFavorite} />} />
     </Routes>
   );
 }
@@ -17,7 +27,7 @@ function App() {
 export default App;
 
 // Overzichtspagina
-function GalleryHome({ cards }) {
+function GalleryHome({ cards, onToggleFavorite }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSeries, setSelectedSeries] = useState([]);
   const [selectedSides, setSelectedSides] = useState([]);
@@ -160,6 +170,11 @@ const statMatch = term.match(
             <h2>{card.title}</h2>
             <p>
               <Link to={`/card/${card.id}`}>Bekijk kaart</Link>
+            
+            <button onClick={() => onToggleFavorite(card.id, card.isFavorite)}
+              className={`heart-button ${card.isFavorite ? "favorited" : ""}`}>
+               ♥ 
+            </button>
             </p>
           </div>
         ))}
@@ -169,7 +184,7 @@ const statMatch = term.match(
 }
 
 // Detailpagina
-function CardDetailPage({ cards }) {
+function CardDetailPage({ cards, onToggleFavorite }) {
   const { id } = useParams();
   const card = cards.find((c) => c.id === id);
 
@@ -215,6 +230,11 @@ function CardDetailPage({ cards }) {
     {card.deploy !== undefined && <p><strong>Deploy:</strong>{card.deploy}</p>}
     {card.forfeit !== undefined && <p><strong>Forfeit:</strong>{card.forfeit}</p>}
     {card.destiny !== undefined && (<p><strong>Destiny:</strong>{" "}{Array.isArray(card.destiny)? card.destiny.join(" / "): card.destiny}</p>)}
+    
+    <button onClick={() => onToggleFavorite(card.id, card.isFavorite)}
+      className={`heart-button ${card.isFavorite ? "favorited" : ""}`}>
+      ♥ 
+    </button>
     </div>
   );
 }
