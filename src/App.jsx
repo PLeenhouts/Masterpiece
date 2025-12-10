@@ -24,10 +24,20 @@ function handleAddComment(id, text, author) {
    );
 }
 
+function handleRateCard(id, rating) {
+  setCards((prevCards) =>
+    prevCards.map((card) =>
+      card.id === id
+        ? { ...card, rating }
+        : card
+    )
+  );
+}
+
     return (
     <Routes>
-      <Route path="/" element={<GalleryHome cards={cards} onToggleFavorite={handleToggleFavorite} />} />
-      <Route path="/card/:id" element={<CardDetailPage cards={cards} onToggleFavorite={handleToggleFavorite} onAddComment={handleAddComment} />} />
+      <Route path="/" element={<GalleryHome cards={cards} onToggleFavorite={handleToggleFavorite} onRateCard={handleRateCard} />} />
+      <Route path="/card/:id" element={<CardDetailPage cards={cards} onToggleFavorite={handleToggleFavorite} onAddComment={handleAddComment} onRateCard={handleRateCard} />} />
       <Route path="/favorites" element={<FavoritesPage cards={cards} onToggleFavorite={handleToggleFavorite} />} />  
     </Routes>
   );
@@ -36,7 +46,7 @@ function handleAddComment(id, text, author) {
 export default App;
 
 // Overzichtspagina
-function GalleryHome({ cards, onToggleFavorite }) {
+function GalleryHome({ cards, onToggleFavorite, onRateCard }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSeries, setSelectedSeries] = useState([]);
   const [selectedSides, setSelectedSides] = useState([]);
@@ -89,7 +99,7 @@ const statMatch = term.match(
 
     const title = (card.title || "").toLowerCase();
     const type = (card.type || "").toLowerCase();
-    const series = (card.series || "").toLowerCase();
+    const series = (card.serie || "").toLowerCase();
     const side = (card.side || "").toLowerCase();
     const rarity = (card.rarity || "").toLowerCase();
     const rank = (card.rank || "").toLowerCase();
@@ -189,6 +199,18 @@ const statMatch = term.match(
                ♥ 
             </button>
             </p>
+        <div className="rating rating-small">
+        {[1, 2, 3, 4, 5].map((star) => (
+        <button
+          key={star}
+          type="button"
+          onClick={() => onRateCard(card.id, star)}
+          className={star <= (card.rating || 0) ? "star filled" : "star"}
+          aria-label={`${star} ster${star > 1 ? "ren" : ""}`}>
+            ★
+        </button>
+              ))}
+            </div>
           </div>
         ))}
       </div>
@@ -197,7 +219,7 @@ const statMatch = term.match(
 }
 
 // Detailpagina
-function CardDetailPage({ cards, onToggleFavorite, onAddComment }) {
+function CardDetailPage({ cards, onToggleFavorite, onAddComment, onRateCard }) {
   const { id } = useParams();
   const card = cards.find((c) => c.id === id);
   const [author, setAuthor] = useState("");
@@ -239,7 +261,7 @@ function handleSubmitComment() {
 
       <h1>{card.title}</h1>
 
-    {card.series !== undefined && <p><strong>Serie:</strong> {card.series}</p>}
+    {card.serie !== undefined && <p><strong>Serie:</strong> {card.serie}</p>}
     {card.year !== undefined && <p><strong>Jaar:</strong> {card.year}</p>}
     {card.side !== undefined && <p><strong>Side:</strong> {card.side}</p>}
     {card.type !== undefined && <p><strong>Type kaart:</strong> {card.type}</p>}
@@ -260,6 +282,26 @@ function handleSubmitComment() {
       className={`heart-button ${card.isFavorite ? "favorited" : ""}`}>
       ♥ 
     </button>
+
+<div className="rating">
+  <span>Rating:</span>
+  {[1, 2, 3, 4, 5].map((star) => (
+    <button
+      key={star}
+      type="button"
+      onClick={() => onRateCard(card.id, star)}
+      className={
+        star <= (card.rating || 0) ? "star filled" : "star"
+      }
+      aria-label={`${star} ster${star > 1 ? "ren" : ""}`}
+    >
+      ★
+    </button>
+  ))}
+  <span className="rating-value">
+    {card.rating ? `${card.rating}/5` : "Nog niet beoordeeld"}
+  </span>
+</div>
 
     <hr/>
     <h2>Comments</h2>
