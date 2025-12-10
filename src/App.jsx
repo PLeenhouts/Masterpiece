@@ -15,11 +15,19 @@ function App() {
     );
   }
 
+function handleAddComment(id, text, author) {
+  setCards((prevCards) =>
+    prevCards.map((card) =>
+      card.id === id ? { ...card, comments: [ ...(card.comments || []), { id: Date.now(), text, author, date: new Date().toISOString()}]}
+      : card
+    )
+   );
+}
 
     return (
     <Routes>
       <Route path="/" element={<GalleryHome cards={cards} onToggleFavorite={handleToggleFavorite} />} />
-      <Route path="/card/:id" element={<CardDetailPage cards={cards} onToggleFavorite={handleToggleFavorite} />} />
+      <Route path="/card/:id" element={<CardDetailPage cards={cards} onToggleFavorite={handleToggleFavorite} onAddComment={handleAddComment} />} />
       <Route path="/favorites" element={<FavoritesPage cards={cards} onToggleFavorite={handleToggleFavorite} />} />  
     </Routes>
   );
@@ -189,9 +197,11 @@ const statMatch = term.match(
 }
 
 // Detailpagina
-function CardDetailPage({ cards, onToggleFavorite }) {
+function CardDetailPage({ cards, onToggleFavorite, onAddComment }) {
   const { id } = useParams();
   const card = cards.find((c) => c.id === id);
+  const [author, setAuthor] = useState("");
+  const [commentText, setCommentText] = useState("");
 
   if (!card) {
     return (
@@ -204,6 +214,15 @@ function CardDetailPage({ cards, onToggleFavorite }) {
     );
   }
 
+function handleSubmitComment() {
+    const text = commentText.trim();
+    const name = author.trim() || "Anoniem";
+    if (!text) return; 
+    onAddComment(card.id, text, name);
+    setCommentText("");
+    setAuthor("");
+  }
+
   const cleanedRoles =
     Array.isArray(card.roles)
       ? card.roles.filter((r) => typeof r === "string" && r.trim() !== "")
@@ -212,7 +231,7 @@ function CardDetailPage({ cards, onToggleFavorite }) {
   return (
     <div>
       <p>
-        <Link to="/">Terug naar overzicht</Link>
+        <Link to="/">Terug naar overzicht</Link> |{" "}
         <Link to="/favorites">Naar favorieten</Link>
       </p>
 
@@ -241,6 +260,46 @@ function CardDetailPage({ cards, onToggleFavorite }) {
       className={`heart-button ${card.isFavorite ? "favorited" : ""}`}>
       ♥ 
     </button>
+
+    <hr/>
+    <h2>Comments</h2>
+
+    {card.comments && card.comments.length > 0 ? (
+      <ul>
+        {card.comments.map((c) => (
+          <li key={c.id}>
+            <div>
+              <strong>{c.author || "Anoniem"}</strong> –{" "}
+              {c.date ? new Date(c.date).toLocaleString() : ""}
+            </div>
+            <div>{c.text}</div>
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <p>Nog geen comments.</p>
+    )}
+
+      <div>
+        <p>
+        <input
+          type="text"
+          placeholder="Naam"
+          value={author}
+          onChange={(e) => setAuthor(e.target.value)}/>
+        </p>
+        <p>
+        <textarea
+         rows={2}
+         placeholder="Schrijf een comment..."
+         value={commentText}
+          onChange={(e) => setCommentText(e.target.value)}
+        />
+        </p>
+        <button onClick={handleSubmitComment}>
+           Plaats comment
+        </button>
+      </div>
     </div>
   );
 }
