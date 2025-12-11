@@ -34,12 +34,129 @@ function handleRateCard(id, rating) {
   );
 }
 
+function handleAddCard(data) {
+  setCards((prev) => {
+    const slug =
+      data.title
+        ?.toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/(^-|-$)/g, "") || `card-${Date.now()}`;
+
+    if (prev.some((card) => card.id === slug)) {
+      alert("Er bestaat al een kaart met deze titel. Pas de titel aan.");
+      return prev;
+    }
+
+    let destiny = [];
+    if (data.destiny && data.destiny.trim() !== "") {
+      destiny = data.destiny
+        .split(/[,/]/)
+        .map((d) => d.trim())
+        .filter(Boolean)
+        .map((d) => {
+          const n = Number(d);
+          return Number.isNaN(n) ? d : n; 
+        });
+    }
+
+    const newCard = {
+      id: slug,
+      title: data.title.trim(),
+      serie: data.serie?.trim() || "",
+      side: data.side?.trim() || "",
+      type: data.type?.trim() || "",
+      role: data.role?.trim() || "",
+      rarity: data.rarity?.trim() || "",
+      year: data.year ? Number(data.year) : "",
+      image:
+        data.image?.trim() ||
+        "/src/pictures/placeholder.jpg",
+      description: data.description?.trim() || "",
+      playtext: data.playtext?.trim() || "",
+      roles: data.roles
+        ? data.roles
+            .split(",")
+            .map((r) => r.trim())
+            .filter(Boolean)
+        : [],
+      power: data.power?.trim() || undefined,
+      ability: data.ability?.trim() || undefined,
+      rank: data.rank?.trim() || "",
+      deploy: data.deploy?.trim() || undefined,
+      forfeit: data.forfeit?.trim() || undefined,
+      destiny: destiny.length > 0 ? destiny : undefined,
+      isFavorite: false,
+      comments: [],
+      rating: 0,
+    };
+
+    return [newCard, ...prev];
+  });
+}
+
+function handleUpdateCard(id, data) {
+  setCards((prev) =>
+    prev.map((card) => {
+      if (card.id !== id) return card;
+
+      let destiny = [];
+      if (data.destiny && data.destiny.trim() !== "") {
+        destiny = data.destiny
+          .split(/[,/]/)
+          .map((d) => d.trim())
+          .filter(Boolean)
+          .map((d) => {
+            const n = Number(d);
+            return Number.isNaN(n) ? d : n;
+          });
+      }
+
+      return {
+        ...card,
+        title: data.title.trim(),
+        serie: data.serie?.trim() || "",
+        side: data.side?.trim() || "",
+        type: data.type?.trim() || "",
+        role: data.role?.trim() || "",
+        rarity: data.rarity?.trim() || "",
+        year: data.year ? Number(data.year) : "",
+        image:
+          data.image?.trim() || card.image ||
+          "/src/pictures/placeholder.jpg",
+        description: data.description?.trim() || "",
+        playtext: data.playtext?.trim() || "",
+        roles: data.roles
+          ? data.roles
+              .split(",")
+              .map((r) => r.trim())
+              .filter(Boolean)
+          : [],
+        power: data.power?.trim() || undefined,
+        ability: data.ability?.trim() || undefined,
+        rank: data.rank?.trim() || "",
+        deploy: data.deploy?.trim() || undefined,
+        forfeit: data.forfeit?.trim() || undefined,
+        destiny: destiny.length > 0 ? destiny : undefined,
+      };
+    })
+  );
+}
+
+function handleDeleteCard(id) {
+  if (!window.confirm("Weet je zeker dat je deze kaart wilt verwijderen?")) {
+    return;
+  }
+
+  setCards((prev) => prev.filter((card) => card.id !== id));
+}
+
     return (
     <Routes>
       <Route path="/" element={<GalleryHome cards={cards} onToggleFavorite={handleToggleFavorite} onRateCard={handleRateCard} />} />
       <Route path="/card/:id" element={<CardDetailPage cards={cards} onToggleFavorite={handleToggleFavorite} onAddComment={handleAddComment} onRateCard={handleRateCard} />} />
       <Route path="/favorites" element={<FavoritesPage cards={cards} onToggleFavorite={handleToggleFavorite} />} />
-      <Route path="/admin" element={<AdminGate artworks={cards} />} />  
+      <Route path="/admin" element={<AdminGate cards={cards} onAddCard={handleAddCard} onUpdateCard={handleUpdateCard} onDeleteCard={handleDeleteCard} />} />  
     </Routes>
   );
 }
@@ -386,7 +503,7 @@ function FavoritesPage({ cards, onToggleFavorite }) {
 }
 
 // Beveiligde login Admin-pagina
-function AdminGate({ cards }) {
+function AdminGate({ cards, onAddCard, onUpdateCard, onDeleteCard }) {
   const [password, setPassword] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [error, setError] = useState("");
@@ -402,7 +519,11 @@ function AdminGate({ cards }) {
   }
 
     if (isAuthenticated) {
-    return <AdminPage cards={cards} />;
+    return <AdminPage cards={cards}        
+                      onAddCard={onAddCard}
+                      onUpdateCard={onUpdateCard}
+                      onDeleteCard={onDeleteCard} 
+            />;
   }
 
    return (
@@ -430,15 +551,367 @@ function AdminGate({ cards }) {
 }
 
 //admin-pagina
-function AdminPage({ cards }) {
+function AdminPage({ cards, onAddCard, onUpdateCard, onDeleteCard }) {
+  const [editId, setEditId] = useState(null);
+
+  const [title, setTitle] = useState("");
+  const [serie, setSerie] = useState("");
+  const [side, setSide] = useState("");
+  const [type, setType] = useState("");
+  const [role, setRole] = useState("");
+  const [rarity, setRarity] = useState("");
+  const [year, setYear] = useState("");
+  const [image, setImage] = useState("");
+  const [description, setDescription] = useState("");
+  const [playtext, setPlaytext] = useState("");
+  const [roles, setRoles] = useState("");      // kommagescheiden invoer
+  const [power, setPower] = useState("");
+  const [ability, setAbility] = useState("");
+  const [rank, setRank] = useState("");
+  const [deploy, setDeploy] = useState("");
+  const [forfeit, setForfeit] = useState("");
+  const [destiny, setDestiny] = useState("");  // bv: "1" of "2, 5" of "π"
+
+  function resetForm() {
+    setEditId(null);
+    setTitle("");
+    setSerie("");
+    setSide("");
+    setType("");
+    setRole("");
+    setRarity("");
+    setYear("");
+    setImage("");
+    setDescription("");
+    setPlaytext("");
+    setRoles("");
+    setPower("");
+    setAbility("");
+    setRank("");
+    setDeploy("");
+    setForfeit("");
+    setDestiny("");
+  }
+
+  function handleSubmit(e) {
+    e.preventDefault();
+
+    if (!title.trim()) {
+      alert("Titel is verplicht.");
+      return;
+    }
+
+    const data = {
+      title,
+      serie,
+      side,
+      type,
+      role,
+      rarity,
+      year,
+      image,
+      description,
+      playtext,
+      roles,
+      power,
+      ability,
+      rank,
+      deploy,
+      forfeit,
+      destiny,
+    };
+
+    if (editId) {
+      onUpdateCard(editId, data);
+    } else {
+      onAddCard(data);
+    }
+
+    resetForm();
+  }
+
+  function handleEdit(card) {
+    setEditId(card.id);
+    setTitle(card.title || "");
+    setSerie(card.serie || "");
+    setSide(card.side || "");
+    setType(card.type || "");
+    setRole(card.role || "");
+    setRarity(card.rarity || "");
+    setYear(card.year ?? "");
+    setImage(card.image || "");
+    setDescription(card.description || "");
+    setPlaytext(card.playtext || "");
+    setRoles(
+      Array.isArray(card.roles) ? card.roles.join(", ") : ""
+    );
+    setPower(card.power ?? "");
+    setAbility(card.ability ?? "");
+    setRank(card.rank ?? "");
+    setDeploy(card.deploy ?? "");
+    setForfeit(card.forfeit ?? "");
+    setDestiny(
+      Array.isArray(card.destiny)
+        ? card.destiny.join(", ")
+        : card.destiny ?? ""
+    );
+  }
+
   return (
     <div>
-      <h1>Admin-pagina</h1>
-      <p>Je ziet dit alleen na het juiste wachtwoord ("test").</p>
-
+      <h1>Admin – Kaarten beheren</h1>
       <p>
         <Link to="/">Terug naar overzicht</Link>
       </p>
+
+      <h2>{editId ? "Kaart bewerken" : "Nieuwe kaart toevoegen"}</h2>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label>
+            Titel*:
+            <input
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
+          </label>
+        </div>
+
+        <div>
+          <label>
+            Serie:
+            <input
+              type="text"
+              value={serie}
+              onChange={(e) => setSerie(e.target.value)}
+            />
+          </label>
+        </div>
+
+        <div>
+          <label>
+            Side:
+            <input
+              type="text"
+              value={side}
+              onChange={(e) => setSide(e.target.value)}
+            />
+          </label>
+        </div>
+
+        <div>
+          <label>
+            Type:
+            <input
+              type="text"
+              value={type}
+              onChange={(e) => setType(e.target.value)}
+            />
+          </label>
+        </div>
+
+        <div>
+          <label>
+            Role:
+            <input
+              type="text"
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+            />
+          </label>
+        </div>
+
+        <div>
+          <label>
+            Rarity:
+            <input
+              type="text"
+              value={rarity}
+              onChange={(e) => setRarity(e.target.value)}
+            />
+          </label>
+        </div>
+
+        <div>
+          <label>
+            Jaar:
+            <input
+              type="text"
+              inputMode="numeric"
+              value={year}              
+              placeholder="Bijv. 2025"
+              onChange={(e) => setYear(e.target.value)}             
+            />
+          </label>
+        </div>
+
+        <div>
+          <label>
+            Afbeelding-pad:
+            <input
+              type="text"
+              value={image}
+              onChange={(e) => setImage(e.target.value)}
+              placeholder="/src/pictures/Darth Vader.jpg"
+            />
+          </label>
+        </div>
+
+        <div>
+          <label>
+            Beschrijving:
+            <input
+              type="text"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+          </label>
+        </div>
+
+        <div>
+          <label>
+            Gametekst (playtext):
+            <input
+              type="text"
+              value={playtext}
+              onChange={(e) => setPlaytext(e.target.value)}
+            />
+          </label>
+        </div>
+
+        <div>
+          <label>
+            Rollen (kommagescheiden):
+            <input
+              type="text"
+              value={roles}
+              onChange={(e) => setRoles(e.target.value)}
+            />
+          </label>
+        </div>
+
+        <div>
+          <label>
+            Power:
+            <input
+              type="text"
+              value={power}
+              onChange={(e) => setPower(e.target.value)}
+            />
+          </label>
+        </div>
+
+        <div>
+          <label>
+            Ability:
+            <input
+              type="text"
+              value={ability}
+              onChange={(e) => setAbility(e.target.value)}
+            />
+          </label>
+        </div>
+
+        <div>
+          <label>
+            Rank:
+            <input
+              type="text"
+              value={rank}
+              onChange={(e) => setRank(e.target.value)}
+            />
+          </label>
+        </div>
+
+        <div>
+          <label>
+            Deploy:
+            <input
+              type="text"
+              value={deploy}
+              onChange={(e) => setDeploy(e.target.value)}
+            />
+          </label>
+        </div>
+
+        <div>
+          <label>
+            Forfeit:
+            <input
+              type="text"
+              value={forfeit}
+              onChange={(e) => setForfeit(e.target.value)}
+            />
+          </label>
+        </div>
+
+        <div>
+          <label>
+            Destiny:
+            <input
+              type="text"
+              value={destiny}
+              onChange={(e) => setDestiny(e.target.value)}
+            />
+          </label>
+        </div>
+
+        <button type="submit">
+          {editId ? "Wijzigingen opslaan" : "Toevoegen"}
+        </button>
+        {editId && (
+          <button type="button" onClick={resetForm}>
+            Annuleren
+          </button>
+        )}
+      </form>
+
+      <h2>Bestaande kaarten</h2>
+      {cards.length === 0 ? (
+        <p>Er zijn nog geen kaarten.</p>
+      ) : (
+        <table>
+          <thead>
+            <tr>
+              <th>Titel</th>
+              <th>Serie</th>
+              <th>Side</th>
+              <th>Type</th>
+              <th>Jaar</th>
+              <th>Rarity</th>
+              <th>Afbeelding</th>
+              <th>Acties</th>
+            </tr>
+          </thead>
+          <tbody>
+            {cards.map((card) => (
+              <tr key={card.id}>
+                <td>{card.title}</td>
+                <td>{card.serie}</td>
+                <td>{card.side}</td>
+                <td>{card.type}</td>
+                <td>{card.year}</td>
+                <td>{card.rarity}</td>
+                <td>{card.image}</td>
+                <td>
+                  <button
+                    type="button"
+                    onClick={() => handleEdit(card)}
+                  >
+                    Bewerken
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => onDeleteCard(card.id)}
+                  >
+                    Verwijderen
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 }
