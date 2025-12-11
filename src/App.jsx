@@ -38,7 +38,8 @@ function handleRateCard(id, rating) {
     <Routes>
       <Route path="/" element={<GalleryHome cards={cards} onToggleFavorite={handleToggleFavorite} onRateCard={handleRateCard} />} />
       <Route path="/card/:id" element={<CardDetailPage cards={cards} onToggleFavorite={handleToggleFavorite} onAddComment={handleAddComment} onRateCard={handleRateCard} />} />
-      <Route path="/favorites" element={<FavoritesPage cards={cards} onToggleFavorite={handleToggleFavorite} />} />  
+      <Route path="/favorites" element={<FavoritesPage cards={cards} onToggleFavorite={handleToggleFavorite} />} />
+      <Route path="/admin" element={<AdminGate artworks={cards} />} />  
     </Routes>
   );
 }
@@ -131,7 +132,8 @@ const statMatch = term.match(
       <p>Kaartoverzicht.</p>
 
       <p>
-        <Link to="/favorites">Bekijk favorieten</Link>
+        <Link to="/favorites">Bekijk favorieten</Link> |{" "}
+        <Link to="/admin">Admin</Link>
       </p>
 
       <input
@@ -379,6 +381,64 @@ function FavoritesPage({ cards, onToggleFavorite }) {
           </div>
         ))}
       </div>
+    </div>
+  );
+}
+
+// Beveiligde login Admin-pagina
+function AdminGate({ cards }) {
+  const [password, setPassword] = useState("");
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [error, setError] = useState("");
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    if (password === "test") {
+      setIsAuthenticated(true);
+      setError("");
+    } else {
+      setError("Onjuist wachtwoord.");
+    }
+  }
+
+    if (isAuthenticated) {
+    return <AdminPage cards={cards} />;
+  }
+
+   return (
+    <div>
+      <h1>Admin login</h1>
+      <p>Voer het admin-wachtwoord in om verder te gaan.</p>
+
+      <form onSubmit={handleSubmit}>
+        <input
+          type="password"
+          placeholder="Wachtwoord"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <button type="submit">Inloggen</button>
+      </form>
+
+      {error && <p style={{ color: "red" }}>{error}</p>}
+
+      <p>
+        <Link to="/">Terug naar overzicht</Link>
+      </p>
+    </div>
+  );
+}
+
+//admin-pagina
+function AdminPage({ cards }) {
+  return (
+    <div>
+      <h1>Admin-pagina</h1>
+      <p>Je ziet dit alleen na het juiste wachtwoord ("test").</p>
+
+      <p>
+        <Link to="/">Terug naar overzicht</Link>
+      </p>
     </div>
   );
 }
