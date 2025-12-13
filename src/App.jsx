@@ -60,7 +60,6 @@ function App() {
   if (errorMsg) return <p style={{ color: "red" }}>{errorMsg}</p>;
 
 function getPublicImageUrl(path) {
-  //if (!path) return "/pictures/placeholder.jpg"; // fallback in public/
   const { data } = supabase.storage.from("card-images").getPublicUrl(path);
   return data.publicUrl;
 }
