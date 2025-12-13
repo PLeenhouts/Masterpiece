@@ -64,14 +64,36 @@ function getPublicImageUrl(path) {
   return data.publicUrl;
 }
 
-  function handleToggleFavorite(id) {
-    setCards((prevCards) =>
-      prevCards.map((card) =>
-        card.id === id ? { ...card, isFavorite: !card.isFavorite } 
-        : card
+async function handleToggleFavorite(id) {
+  const current = cards.find((c) => String(c.id) === String(id));
+  if (!current) return;
+
+  const nextValue = !current.isFavorite;
+
+  setCards((prev) =>
+    prev.map((c) =>
+      String(c.id) === String(id) ? { ...c, isFavorite: nextValue } : c
+    )
+  );
+
+  const { error } = await supabase
+    .from("cards")
+    .update({ is_favorite: nextValue })
+    .eq("id", id);
+
+
+  if (error) {
+    console.error("Favorite opslaan mislukt:", error);
+
+    setCards((prev) =>
+      prev.map((c) =>
+        String(c.id) === String(id) ? { ...c, isFavorite: !nextValue } : c
       )
     );
+
+    alert("Kon favoriet niet opslaan.");
   }
+}
 
 function handleAddComment(id, text, author) {
   setCards((prevCards) =>
@@ -82,14 +104,34 @@ function handleAddComment(id, text, author) {
    );
 }
 
-function handleRateCard(id, rating) {
-  setCards((prevCards) =>
-    prevCards.map((card) =>
-      card.id === id
-        ? { ...card, rating }
-        : card
-    )
-  );
+async function handleRateCard(id, rating) {
+  let oldRating = 0;
+
+  setCards((prev) => {
+    const found = prev.find((c) => String(c.id) === String(id));
+    oldRating = found?.rating ?? 0;
+
+    return prev.map((card) =>
+      String(card.id) === String(id) ? { ...card, rating } : card
+    );
+  });
+
+  const { error } = await supabase
+    .from("cards")
+    .update({ rating })
+    .eq("id", id);
+
+  if (error) {
+    console.error("Rating opslaan mislukt:", error);
+
+    setCards((prev) =>
+      prev.map((card) =>
+        String(card.id) === String(id) ? { ...card, rating: oldRating } : card
+      )
+    );
+
+    alert("Kon rating niet opslaan.");
+  }
 }
 
 async function handleAddCard(formData) {
@@ -361,7 +403,7 @@ const statMatch = term.match(
             <p>
               <Link to={`/card/${card.id}`}>Bekijk kaart</Link>
             
-            <button onClick={() => onToggleFavorite(card.id, card.isFavorite)}
+            <button onClick={() => onToggleFavorite(card.id)}
               className={`heart-button ${card.isFavorite ? "favorited" : ""}`}>
                ♥ 
             </button>
@@ -445,7 +487,7 @@ function handleSubmitComment() {
     {card.forfeit !== undefined && <p><strong>Forfeit:</strong>{card.forfeit}</p>}
     {card.destiny !== undefined && (<p><strong>Destiny:</strong>{" "}{Array.isArray(card.destiny)? card.destiny.join(" / "): card.destiny}</p>)}
     
-    <button onClick={() => onToggleFavorite(card.id, card.isFavorite)}
+    <button onClick={() => onToggleFavorite(card.id)}
       className={`heart-button ${card.isFavorite ? "favorited" : ""}`}>
       ♥ 
     </button>
@@ -539,7 +581,7 @@ function FavoritesPage({ cards, onToggleFavorite }) {
 
             <h2>{card.title}</h2>
 
-       <button onClick={() => onToggleFavorite(card.id, card.isFavorite)}
+       <button onClick={() => onToggleFavorite(card.id)}
         className={`heart-button ${card.isFavorite ? "favorited" : ""}`}>
         ♥ 
        </button>
