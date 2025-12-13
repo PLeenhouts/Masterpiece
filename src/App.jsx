@@ -95,15 +95,6 @@ async function handleToggleFavorite(id) {
   }
 }
 
-function handleAddComment(id, text, author) {
-  setCards((prevCards) =>
-    prevCards.map((card) =>
-      card.id === id ? { ...card, comments: [ ...(card.comments || []), { id: Date.now(), text, author, date: new Date().toISOString()}]}
-      : card
-    )
-   );
-}
-
 async function handleRateCard(id, rating) {
   let oldRating = 0;
 
@@ -244,7 +235,7 @@ async function handleDeleteCard(id) {
     return (
     <Routes>
       <Route path="/" element={<GalleryHome cards={cards} onToggleFavorite={handleToggleFavorite} onRateCard={handleRateCard} />} />
-      <Route path="/card/:id" element={<CardDetailPage cards={cards} onToggleFavorite={handleToggleFavorite} onAddComment={handleAddComment} onRateCard={handleRateCard} />} />
+      <Route path="/card/:id" element={<CardDetailPage cards={cards} onToggleFavorite={handleToggleFavorite} onRateCard={handleRateCard} />} />
       <Route path="/favorites" element={<FavoritesPage cards={cards} onToggleFavorite={handleToggleFavorite} />} />
       <Route path="/admin" element={<AdminGate cards={cards} onAddCard={handleAddCard} onUpdateCard={handleUpdateCard} onDeleteCard={handleDeleteCard} />} />  
     </Routes>
@@ -428,11 +419,38 @@ const statMatch = term.match(
 }
 
 // Detailpagina
-function CardDetailPage({ cards, onToggleFavorite, onAddComment, onRateCard }) {
+function CardDetailPage({ cards, onToggleFavorite, onRateCard }) {
   const { id } = useParams();
   const card = cards.find((c) => String(c.id) === String(id));
   const [author, setAuthor] = useState("");
   const [commentText, setCommentText] = useState("");
+  const [comments, setComments] = useState([]);
+  const [loadingComments, setLoadingComments] = useState(true);
+
+ useEffect(() => {
+    if (!card) return;
+
+    async function fetchComments() {
+      setLoadingComments(true);
+
+      const { data, error } = await supabase
+        .from("comments")
+        .select("*")
+        .eq("card_id", card.id)
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        console.error("Comments laden mislukt:", error);
+        setComments([]);
+      } else {
+        setComments(data ?? []);
+      }
+
+      setLoadingComments(false);
+    }
+
+    fetchComments();
+  }, [card?.id]);
 
   if (!card) {
     return (
@@ -445,11 +463,24 @@ function CardDetailPage({ cards, onToggleFavorite, onAddComment, onRateCard }) {
     );
   }
 
-function handleSubmitComment() {
+  async function handleSubmitComment() {
     const text = commentText.trim();
     const name = author.trim() || "Anoniem";
-    if (!text) return; 
-    onAddComment(card.id, text, name);
+    if (!text || !card) return;
+
+    const { data, error } = await supabase
+      .from("comments")
+      .insert({ card_id: card.id, author: name, text })
+      .select("*")
+      .single();
+
+    if (error) {
+      console.error("Comment opslaan mislukt:", error);
+      alert("Kon comment niet opslaan.");
+      return;
+    }
+
+    setComments((prev) => [data, ...prev]);
     setCommentText("");
     setAuthor("");
   }
@@ -513,23 +544,25 @@ function handleSubmitComment() {
 </div>
 
     <hr/>
-    <h2>Comments</h2>
+ <h2>Comments</h2>
 
-    {card.comments && card.comments.length > 0 ? (
-      <ul>
-        {card.comments.map((c) => (
-          <li key={c.id}>
-            <div>
-              <strong>{c.author || "Anoniem"}</strong> –{" "}
-              {c.date ? new Date(c.date).toLocaleString() : ""}
-            </div>
-            <div>{c.text}</div>
-          </li>
-        ))}
-      </ul>
-    ) : (
-      <p>Nog geen comments.</p>
-    )}
+  {loadingComments ? (
+    <p>Comments laden...</p>
+  ) : comments.length > 0 ? (
+    <ul>
+      {comments.map((c) => (
+        <li key={c.id}>
+          <div>
+            <strong>{c.author || "Anoniem"}</strong> –{" "}
+            {c.created_at ? new Date(c.created_at).toLocaleString() : ""}
+          </div>
+          <div>{c.text}</div>
+        </li>
+      ))}
+    </ul>
+  ) : (
+    <p>Nog geen comments.</p>
+  )}
 
       <div>
         <p>
