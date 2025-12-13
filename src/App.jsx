@@ -92,121 +92,111 @@ function handleRateCard(id, rating) {
   );
 }
 
-function handleAddCard(data) {
-  setCards((prev) => {
-    const slug =
-      data.title
-        ?.toLowerCase()
-        .trim()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/(^-|-$)/g, "") || `card-${Date.now()}`;
+async function handleAddCard(formData) {
+  const payload = {
+    title: formData.title.trim(),
+    serie: formData.serie?.trim() || null,
+    side: formData.side?.trim() || null,
+    type: formData.type?.trim() || null,
+    role: formData.role?.trim() || null,
+    rarity: formData.rarity?.trim() || null,
+    year: formData.year ? Number(formData.year) : null,
+    image: formData.image?.trim() || null,
+    description: formData.description?.trim() || null,
+    playtext: formData.playtext?.trim() || null,
+    roles: formData.roles ? formData.roles.split(",").map(r => r.trim()).filter(Boolean) : [],
+    power: formData.power?.trim() || null,
+    ability: formData.ability?.trim() || null,
+    rank: formData.rank?.trim() || null,
+    deploy: formData.deploy?.trim() || null,
+    forfeit: formData.forfeit?.trim() || null,
+  };
 
-    if (prev.some((card) => card.id === slug)) {
-      alert("Er bestaat al een kaart met deze titel. Pas de titel aan.");
-      return prev;
-    }
+  const { data, error } = await supabase
+    .from("cards")
+    .insert(payload)
+    .select("*")
+    .single();
 
-    let destiny = [];
-    if (data.destiny && data.destiny.trim() !== "") {
-      destiny = data.destiny
-        .split(/[,/]/)
-        .map((d) => d.trim())
-        .filter(Boolean)
-        .map((d) => {
-          const n = Number(d);
-          return Number.isNaN(n) ? d : n; 
-        });
-    }
-
-    const newCard = {
-      id: slug,
-      title: data.title.trim(),
-      serie: data.serie?.trim() || "",
-      side: data.side?.trim() || "",
-      type: data.type?.trim() || "",
-      role: data.role?.trim() || "",
-      rarity: data.rarity?.trim() || "",
-      year: data.year ? Number(data.year) : "",
-      image:
-        data.image?.trim() ||
-        "/src/pictures/placeholder.jpg",
-      description: data.description?.trim() || "",
-      playtext: data.playtext?.trim() || "",
-      roles: data.roles
-        ? data.roles
-            .split(",")
-            .map((r) => r.trim())
-            .filter(Boolean)
-        : [],
-      power: data.power?.trim() || undefined,
-      ability: data.ability?.trim() || undefined,
-      rank: data.rank?.trim() || "",
-      deploy: data.deploy?.trim() || undefined,
-      forfeit: data.forfeit?.trim() || undefined,
-      destiny: destiny.length > 0 ? destiny : undefined,
-      isFavorite: false,
-      comments: [],
-      rating: 0,
-    };
-
-    return [newCard, ...prev];
-  });
-}
-
-function handleUpdateCard(id, data) {
-  setCards((prev) =>
-    prev.map((card) => {
-      if (card.id !== id) return card;
-
-      let destiny = [];
-      if (data.destiny && data.destiny.trim() !== "") {
-        destiny = data.destiny
-          .split(/[,/]/)
-          .map((d) => d.trim())
-          .filter(Boolean)
-          .map((d) => {
-            const n = Number(d);
-            return Number.isNaN(n) ? d : n;
-          });
-      }
-
-      return {
-        ...card,
-        title: data.title.trim(),
-        serie: data.serie?.trim() || "",
-        side: data.side?.trim() || "",
-        type: data.type?.trim() || "",
-        role: data.role?.trim() || "",
-        rarity: data.rarity?.trim() || "",
-        year: data.year ? Number(data.year) : "",
-        image:
-          data.image?.trim() || card.image ||
-          "/src/pictures/placeholder.jpg",
-        description: data.description?.trim() || "",
-        playtext: data.playtext?.trim() || "",
-        roles: data.roles
-          ? data.roles
-              .split(",")
-              .map((r) => r.trim())
-              .filter(Boolean)
-          : [],
-        power: data.power?.trim() || undefined,
-        ability: data.ability?.trim() || undefined,
-        rank: data.rank?.trim() || "",
-        deploy: data.deploy?.trim() || undefined,
-        forfeit: data.forfeit?.trim() || undefined,
-        destiny: destiny.length > 0 ? destiny : undefined,
-      };
-    })
-  );
-}
-
-function handleDeleteCard(id) {
-  if (!window.confirm("Weet je zeker dat je deze kaart wilt verwijderen?")) {
+  if (error) {
+    console.error("Insert error:", error);
+    alert("Toevoegen mislukt (RLS/policy?)");
     return;
   }
 
-  setCards((prev) => prev.filter((card) => card.id !== id));
+  setCards(prev => [
+    {
+      ...data,
+      image: getPublicImageUrl(data.image),
+      isFavorite: data.is_favorite ?? false,
+      rating: data.rating ?? 0,
+      comments: [],
+    },
+    ...prev,
+  ]);
+}
+
+async function handleUpdateCard(id, formData) {
+  const payload = {
+    title: formData.title.trim(),
+    serie: formData.serie?.trim() || null,
+    side: formData.side?.trim() || null,
+    type: formData.type?.trim() || null,
+    role: formData.role?.trim() || null,
+    rarity: formData.rarity?.trim() || null,
+    year: formData.year ? Number(formData.year) : null,
+    image: formData.image?.trim() || null,
+    description: formData.description?.trim() || null,
+    playtext: formData.playtext?.trim() || null,
+    roles: formData.roles ? formData.roles.split(",").map(r => r.trim()).filter(Boolean) : [],
+    power: formData.power?.trim() || null,
+    ability: formData.ability?.trim() || null,
+    rank: formData.rank?.trim() || null,
+    deploy: formData.deploy?.trim() || null,
+    forfeit: formData.forfeit?.trim() || null,
+  };
+
+  const { data, error } = await supabase
+    .from("cards")
+    .update(payload)
+    .eq("id", id)
+    .select("*")
+    .single();
+
+  if (error) {
+    console.error("Update error:", error);
+    alert("Bewerken mislukt (RLS/policy?)");
+    return;
+  }
+
+  setCards(prev =>
+    prev.map(card =>
+      String(card.id) === String(id)
+        ? {
+            ...card,
+            ...data,
+            image: getPublicImageUrl(data.image),
+          }
+        : card
+    )
+  );
+}
+
+async function handleDeleteCard(id) {
+  if (!window.confirm("Weet je zeker dat je deze kaart wilt verwijderen?")) return;
+
+  const { error } = await supabase
+    .from("cards")
+    .delete()
+    .eq("id", id);
+
+  if (error) {
+    console.error("Delete error:", error);
+    alert("Verwijderen mislukt (RLS/policy?)");
+    return;
+  }
+
+  setCards(prev => prev.filter(card => String(card.id) !== String(id)));
 }
 
     return (
@@ -611,7 +601,6 @@ function AdminGate({ cards, onAddCard, onUpdateCard, onDeleteCard }) {
 //admin-pagina
 function AdminPage({ cards, onAddCard, onUpdateCard, onDeleteCard }) {
   const [editId, setEditId] = useState(null);
-
   const [title, setTitle] = useState("");
   const [serie, setSerie] = useState("");
   const [side, setSide] = useState("");
@@ -622,13 +611,13 @@ function AdminPage({ cards, onAddCard, onUpdateCard, onDeleteCard }) {
   const [image, setImage] = useState("");
   const [description, setDescription] = useState("");
   const [playtext, setPlaytext] = useState("");
-  const [roles, setRoles] = useState("");      // kommagescheiden invoer
+  const [roles, setRoles] = useState("");
   const [power, setPower] = useState("");
   const [ability, setAbility] = useState("");
   const [rank, setRank] = useState("");
   const [deploy, setDeploy] = useState("");
   const [forfeit, setForfeit] = useState("");
-  const [destiny, setDestiny] = useState("");  // bv: "1" of "2, 5" of "π"
+  const [destiny, setDestiny] = useState("");
 
   function resetForm() {
     setEditId(null);
@@ -701,8 +690,7 @@ function AdminPage({ cards, onAddCard, onUpdateCard, onDeleteCard }) {
     setDescription(card.description || "");
     setPlaytext(card.playtext || "");
     setRoles(
-      Array.isArray(card.roles) ? card.roles.join(", ") : ""
-    );
+      Array.isArray(card.roles) ? card.roles.join(", ") : "");
     setPower(card.power ?? "");
     setAbility(card.ability ?? "");
     setRank(card.rank ?? "");
@@ -810,7 +798,7 @@ function AdminPage({ cards, onAddCard, onUpdateCard, onDeleteCard }) {
               type="text"
               value={image}
               onChange={(e) => setImage(e.target.value)}
-              placeholder="/src/pictures/Darth Vader.jpg"
+              placeholder="naam.jpg"
             />
           </label>
         </div>
