@@ -1,10 +1,69 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Routes, Route, Link, useParams } from "react-router-dom";
-import { initialCards } from "./data/cards.js";
+import { supabase } from "./supabaseClient.js";
 import './App.css'
 
 function App() {
-  const [cards, setCards] = useState(initialCards);
+  const [cards, setCards] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [errorMsg, setErrorMsg] = useState("");
+
+  useEffect(() => {
+    async function fetchCards() {
+      setLoading(true);
+      setErrorMsg("");
+
+      const { data, error } = await supabase
+        .from("cards")
+        .select("*")
+        .order("title", { ascending: true });
+
+      if (error) {
+        console.error("Fout bij laden cards:", error);
+        setErrorMsg("Kon kaarten niet laden.");
+        setCards([]);
+      } else {
+        const mapped = (data ?? []).map((row) => ({
+          id: row.id,
+          title: row.title ?? "",
+          serie: row.serie ?? "",
+          side: row.side ?? "",
+          type: row.type ?? "",
+          role: row.role ?? "",
+          rarity: row.rarity ?? "",
+          year: row.year ?? "",
+          image: getPublicImageUrl(row.image),
+          description: row.description ?? "",
+          playtext: row.playtext ?? "",
+          roles: Array.isArray(row.roles) ? row.roles : [],
+          power: row.power ?? undefined,
+          ability: row.ability ?? undefined,
+          armor: row.armor ?? undefined,
+          deploy: row.deploy ?? undefined,
+          forfeit: row.forfeit ?? undefined,
+          destiny: Array.isArray(row.destiny) ? row.destiny : (row.destiny ?? undefined),
+          isFavorite: row.is_favorite ?? false,
+          rating: row.rating ?? 0,
+          comments: [],
+        }));
+
+        setCards(mapped);
+      }
+
+      setLoading(false);
+    }
+
+    fetchCards();
+  }, []);
+
+  if (loading) return <p>Kaarten laden...</p>;
+  if (errorMsg) return <p style={{ color: "red" }}>{errorMsg}</p>;
+
+function getPublicImageUrl(path) {
+  //if (!path) return "/pictures/placeholder.jpg"; // fallback in public/
+  const { data } = supabase.storage.from("card-images").getPublicUrl(path);
+  return data.publicUrl;
+}
 
   function handleToggleFavorite(id) {
     setCards((prevCards) =>
@@ -340,7 +399,7 @@ const statMatch = term.match(
 // Detailpagina
 function CardDetailPage({ cards, onToggleFavorite, onAddComment, onRateCard }) {
   const { id } = useParams();
-  const card = cards.find((c) => c.id === id);
+  const card = cards.find((c) => String(c.id) === String(id));
   const [author, setAuthor] = useState("");
   const [commentText, setCommentText] = useState("");
 
