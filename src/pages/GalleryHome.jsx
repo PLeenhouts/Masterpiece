@@ -72,13 +72,23 @@ export default function GalleryHome({ cards, onToggleFavorite, onRateCard }) {
 
   return (
     <div>
-      <h1>Holocron-Archives</h1>
-      <p>Kaartoverzicht.</p>
+      <h1>“Holocron-Archives” - …Unlock the secrets of the Force… One card at a time.</h1>
+      <p>Een virtueel overzicht van Star Wars CCG kaarten</p>
+      <hr/>
 
       <p>
-        <Link to="/favorites">Bekijk favorieten</Link> | <Link to="/admin">Admin</Link>
+      <h2>Links</h2>
+            <p>
+        <Link to="/favorites">Naar favorietenpagina</Link> |{" "}
+        <Link to="/admin">Inloggen als admin</Link>
       </p>
+      </p>
+      <hr/>
 
+
+      <h2>Zoeken en/of filteren van kaarten</h2>
+      <p>Je kunt hier zoeken op namen of kaarteigenschappen. Ook kun je hier bepaalde series en/of kaartsoorten filteren, om het zoeken makkelijker te maken.</p>
+      <p></p>
       <SearchBar
         value={searchTerm}
         onChange={setSearchTerm}
@@ -96,7 +106,8 @@ export default function GalleryHome({ cards, onToggleFavorite, onRateCard }) {
         selectedTypes={selectedTypes}
         onToggleType={(v) => toggleInArray(v, setSelectedTypes)}
       />
-
+      <hr/>
+      <h2>Kaartoverzicht</h2>
       <CardGrid
         cards={filteredCards}
         onToggleFavorite={onToggleFavorite}
