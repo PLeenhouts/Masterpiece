@@ -18,14 +18,14 @@ export default function CardInfo({ card }) {
       {card.ability !== undefined && <p><strong>Ability:</strong> {card.ability}</p>}
       {card.rank && card.rank.trim() !== "" && <p><strong>Rank:</strong> {card.rank}</p>}
       {card.armor !== undefined && <p><strong>Armor:</strong> {card.armor}</p>}
+      {card.maneuver !== undefined && <p><strong>Maneuver:</strong> {card.maneuver}</p>}
+      {card.hyperspeed !== undefined && <p><strong>Hyperspeed:</strong> {card.hyperspeed}</p>}
+      {card.landspeed !== undefined && <p><strong>Landspeed:</strong> {card.landspeed}</p>}
       {card.deploy !== undefined && <p><strong>Deploy:</strong> {card.deploy}</p>}
       {card.forfeit !== undefined && <p><strong>Forfeit:</strong> {card.forfeit}</p>}
-      {card.destiny !== undefined && (
-        <p>
-          <strong>Destiny:</strong>{" "}
-          {Array.isArray(card.destiny) ? card.destiny.join(" / ") : card.destiny}
-        </p>
-      )}
+      {card.destiny !== undefined && (<p><strong>Destiny:</strong>{" "}{Array.isArray(card.destiny) ? card.destiny.join(" / ") : card.destiny}</p>)}
+      {card.forceiconsls !== undefined && <p><strong>Force Icons LS:</strong> {card.forceiconsls}</p>}
+      {card.forceiconsds !== undefined && <p><strong>Force Icons DS:</strong> {card.forceiconsds}</p>}
     </>
   );
 }
