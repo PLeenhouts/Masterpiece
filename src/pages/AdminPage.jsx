@@ -9,9 +9,16 @@ export default function AdminPage({ cards, onAddCard, onUpdateCard, onDeleteCard
 
   return (
     <div>
-      <h1>Admin – Kaarten beheren</h1>
-      <p><Link to="/">Terug naar overzicht</Link></p>
-
+      <h1>“Holocron-Archives” - …Unlock the secrets of the Force… One card at a time.</h1>
+      <p>Een virtueel overzicht van Star Wars CCG kaarten</p>
+      <hr/>
+      <p>
+      <h2>Links</h2>
+      <p><Link to="/">Uitloggen als Admin</Link></p>
+      </p>
+      <hr/>
+      
+      <h2>Admin – Kaarten beheren</h2>
       <AdminForm
         selectedCard={selectedCard}
         onAddCard={onAddCard}
@@ -19,12 +26,14 @@ export default function AdminPage({ cards, onAddCard, onUpdateCard, onDeleteCard
         onCancel={() => setSelectedCard(null)}
       />
 
-      <h2>Bestaande kaarten</h2>
+       <hr/>
+      <h2>Overzicht bestaande kaarten</h2>
       <CardsTable
         cards={cards}
         onEdit={(card) => setSelectedCard(card)}
         onDelete={onDeleteCard}
       />
+       <hr/>
     </div>
   );
 }
