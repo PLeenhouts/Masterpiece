@@ -32,7 +32,17 @@ export default function AdminGate({ cards, onAddCard, onUpdateCard, onDeleteCard
 
   return (
     <div>
-      <h1>Admin login</h1>
+      <h1>“Holocron-Archives” - …Unlock the secrets of the Force… One card at a time.</h1>
+      <p>Een virtueel overzicht van Star Wars CCG kaarten</p>
+      <hr/>
+
+      <p>
+      <h2>Links</h2>
+      <Link to="/">Terug naar startpagina</Link>
+      </p>
+      <hr/>
+
+      <h2>Admin login</h2>
       <p>Voer het admin-wachtwoord in om verder te gaan.</p>
 
       <AdminLoginForm
@@ -42,9 +52,7 @@ export default function AdminGate({ cards, onAddCard, onUpdateCard, onDeleteCard
         error={error}
       />
 
-      <p>
-        <Link to="/">Terug naar overzicht</Link>
-      </p>
+
     </div>
   );
 }
