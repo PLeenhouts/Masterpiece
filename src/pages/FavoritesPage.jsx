@@ -8,12 +8,18 @@ export default function FavoritesPage({ cards, onToggleFavorite }) {
 
   return (
     <div>
-      <h1>Favorieten</h1>
-      <p>Overzicht van alle favoriete kaarten.</p>
+      <h1>“Holocron-Archives” - …Unlock the secrets of the Force… One card at a time.</h1>
+      <p>Een virtueel overzicht van Star Wars CCG kaarten</p>
+      <hr/>
 
       <p>
-        <Link to="/">Terug naar overzicht</Link>
+      <h2>Links</h2>
+      <Link to="/">Terug naar startpagina</Link>
       </p>
+      <hr/>
+
+      <h2>Favorieten</h2>
+      <p>Overzicht van alle favoriete kaarten.</p>
 
       {favoriteCards.length === 0 ? (
         <p>Je hebt nog geen favorieten geselecteerd.</p>

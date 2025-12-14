@@ -76,11 +76,19 @@ export default function CardDetailPage({ cards, onToggleFavorite, onRateCard }) 
 
   return (
     <div>
-      <p>
-        <Link to="/">Terug naar overzicht</Link> |{" "}
-        <Link to="/favorites">Naar favorieten</Link>
-      </p>
+      <h1>“Holocron-Archives” - …Unlock the secrets of the Force… One card at a time.</h1>
+      <p>Een virtueel overzicht van Star Wars CCG kaarten</p>
+      <hr/>
 
+      <p>
+      <h2>Links</h2>
+            <p>
+        <Link to="/">Terug naar startpagina</Link> |{" "}
+        <Link to="/favorites">Naar favorietenpagina</Link>
+      </p>
+      </p>
+      <hr/>
+      <h2>Details van kaart</h2>
       <CardImage src={card.imageUrl || card.image} alt={card.title} />
 
       <h1>{card.title}</h1>
@@ -98,8 +106,7 @@ export default function CardDetailPage({ cards, onToggleFavorite, onRateCard }) 
       />
 
       <hr />
-
-      <h2>Comments</h2>
+      <h1>Comments</h1>
 
       <CommentsList loading={loadingComments} comments={comments} />
 
