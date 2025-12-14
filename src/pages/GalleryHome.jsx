@@ -27,7 +27,7 @@ export default function GalleryHome({ cards, onToggleFavorite, onRateCard }) {
     if (selectedTypes.length > 0 && !selectedTypes.includes(card.type)) return false;
     if (!term) return true;
 
-    const statMatch = term.match(/^(power|ability|armor|deploy|forfeit|destiny)\s+(.+)$/);
+    const statMatch = term.match(/^(power|ability|armor|maneuver|hyperspeed|landspeed|deploy|forfeit|destiny|forceiconsls|forceiconsds)\s+(.+)$/);
     if (statMatch) {
       const field = statMatch[1];
       const value = statMatch[2];
@@ -63,10 +63,15 @@ export default function GalleryHome({ cards, onToggleFavorite, onRateCard }) {
     const power = card.power !== undefined ? String(card.power) : "";
     const ability = card.ability !== undefined ? String(card.ability) : "";
     const armor = card.armor !== undefined ? String(card.armor) : "";
+    const maneuver = card.maneuver !== undefined ? String(card.maneuver) : "";
+    const hyperspeed = card.hyperspeed !== undefined ? String(card.hyperspeed) : "";
+    const landspeed = card.landspeed !== undefined ? String(card.landspeed) : "";
     const deploy = card.deploy !== undefined ? String(card.deploy) : "";
     const forfeit = card.forfeit !== undefined ? String(card.forfeit) : "";
+    const forceiconsls = card.forceiconsls !== undefined ? String(card.forceiconsls) : "";
+    const forceiconsds = card.forceiconsds !== undefined ? String(card.forceiconsds) : "";
 
-    const haystack = [title, type, series, side, rarity, rank, rolesText, destinyText, power, ability, armor, deploy, forfeit].join(" ");
+    const haystack = [title, type, series, side, rarity, rank, rolesText, destinyText, power, ability, armor, maneuver, hyperspeed, landspeed, deploy, forfeit, forceiconsls, forceiconsds].join(" ");
     return haystack.includes(term);
   });
 
