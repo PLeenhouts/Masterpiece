@@ -10,8 +10,6 @@ export default function CardsTable({ cards, onEdit, onDelete }) {
           <th>Side</th>
           <th>Type</th>
           <th>Jaar</th>
-          <th>Rarity</th>
-          <th>Afbeelding (pad)</th>
           <th>Acties</th>
         </tr>
       </thead>
@@ -23,8 +21,6 @@ export default function CardsTable({ cards, onEdit, onDelete }) {
             <td>{card.side}</td>
             <td>{card.type}</td>
             <td>{card.year}</td>
-            <td>{card.rarity}</td>
-            <td>{card.imagePath ?? ""}</td>
             <td>
               <button type="button" onClick={() => onEdit(card)}>Bewerken</button>
               <button type="button" onClick={() => onDelete(card.id)}>Verwijderen</button>
