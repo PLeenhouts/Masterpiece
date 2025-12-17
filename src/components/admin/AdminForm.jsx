@@ -164,7 +164,7 @@ export default function AdminForm({
 
         <div>
           <label>
-            Serie:
+            Serie*:
             <input value={serie} onChange={(e) => setSerie(e.target.value)} placeholder="Naam van serie"/>
           </label>
         </div>
@@ -305,14 +305,14 @@ export default function AdminForm({
         <div> 
           <label>
             Forceiconsls:
-            <input value={destiny} onChange={(e) => setDestiny(e.target.value)} placeholder="Forceicons LS van kaart" />
+            <input value={forceiconsls} onChange={(e) => setForceiconsls(e.target.value)} placeholder="Forceicons LS van kaart" />
           </label>
         </div>
         
         <div> 
           <label>
             Forceiconsds:
-            <input value={destiny} onChange={(e) => setDestiny(e.target.value)} placeholder="Forceicons DS van kaart" />
+            <input value={forceiconsds} onChange={(e) => setForceiconsds(e.target.value)} placeholder="Forceicons DS van kaart" />
           </label>
         </div>
 
