@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Routes, Route, Link, useParams } from "react-router-dom";
 import AdminPage from "./AdminPage.jsx";
-
 import AdminLoginForm from "../components/admin/AdminLoginForm.jsx";
 
 export default function AdminGate({ cards, onAddCard, onUpdateCard, onDeleteCard }) {
@@ -36,10 +35,10 @@ export default function AdminGate({ cards, onAddCard, onUpdateCard, onDeleteCard
       <p>Een virtueel overzicht van Star Wars CCG kaarten</p>
       <hr/>
 
-      <p>
+      <div>
       <h2>Links</h2>
       <Link to="/">Terug naar startpagina</Link>
-      </p>
+      </div>
       <hr/>
 
       <h2>Admin login</h2>
@@ -51,8 +50,6 @@ export default function AdminGate({ cards, onAddCard, onUpdateCard, onDeleteCard
         onSubmit={handleSubmit}
         error={error}
       />
-
-
     </div>
   );
 }
