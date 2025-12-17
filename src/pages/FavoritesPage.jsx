@@ -12,10 +12,10 @@ export default function FavoritesPage({ cards, onToggleFavorite }) {
       <p>Een virtueel overzicht van Star Wars CCG kaarten</p>
       <hr/>
 
-      <p>
+      <div>
       <h2>Links</h2>
       <Link to="/">Terug naar startpagina</Link>
-      </p>
+      </div>
       <hr/>
 
       <h2>Favorieten</h2>

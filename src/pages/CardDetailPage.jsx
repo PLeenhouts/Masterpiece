@@ -80,16 +80,16 @@ export default function CardDetailPage({ cards, onToggleFavorite, onRateCard }) 
       <p>Een virtueel overzicht van Star Wars CCG kaarten</p>
       <hr/>
 
-      <p>
+      <div>
       <h2>Links</h2>
             <p>
         <Link to="/">Terug naar startpagina</Link> |{" "}
         <Link to="/favorites">Naar favorietenpagina</Link>
       </p>
-      </p>
+      </div>
       <hr/>
       <h2>Details van kaart</h2>
-      <CardImage src={card.imageUrl || card.image} alt={card.title} />
+      <CardImage src={card.imageUrl || card.image || "/placeholder.jpg"} alt={card.title} />
 
       <h1>{card.title}</h1>
 

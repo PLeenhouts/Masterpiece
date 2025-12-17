@@ -10,10 +10,16 @@ export default function GalleryHome({ cards, onToggleFavorite, onRateCard }) {
   const [selectedSeries, setSelectedSeries] = useState([]);
   const [selectedSides, setSelectedSides] = useState([]);
   const [selectedTypes, setSelectedTypes] = useState([]);
+  const seriesOrder = ["Premiere", "A New Hope", "Hoth", "Dagobah", "Cloud City", "Jabba's Palace",  "Endor", "Death Star II"];
+  const sideOrder = ["Light", "Dark"];
+  const typeOrder = ["Character", "Starship", "Vehicle", "Weapon", "Device", "Effect", "Interrupt", "Location"];
 
-  const seriesOptions = [...new Set(cards.map((c) => c.serie).filter(Boolean))];
-  const sideOptions = [...new Set(cards.map((c) => c.side).filter(Boolean))];
-  const typeOptions = [...new Set(cards.map((c) => c.type).filter(Boolean))];
+  const seriesOptions = [...new Set(cards.map(c => c.serie).filter(Boolean))]
+  .sort((a, b) => (seriesOrder.indexOf(a) === -1 ? 999 : seriesOrder.indexOf(a)) - (seriesOrder.indexOf(b) === -1 ? 999 : seriesOrder.indexOf(b)));
+  const sideOptions = [...new Set(cards.map(c => c.side).filter(Boolean))]
+  .sort((a, b) => (sideOrder.indexOf(a) === -1 ? 999 : sideOrder.indexOf(a)) - (sideOrder.indexOf(b) === -1 ? 999 : sideOrder.indexOf(b)));
+  const typeOptions = [...new Set(cards.map(c => c.type).filter(Boolean))]
+  .sort((a, b) => (typeOrder.indexOf(a) === -1 ? 999 : typeOrder.indexOf(a)) - (typeOrder.indexOf(b) === -1 ? 999 : typeOrder.indexOf(b)));
 
   const toggleInArray = (value, setter) => {
     setter((prev) => (prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]));
@@ -81,25 +87,25 @@ export default function GalleryHome({ cards, onToggleFavorite, onRateCard }) {
       <p>Een virtueel overzicht van Star Wars CCG kaarten</p>
       <hr/>
 
-      <p>
+      <div>
       <h2>Links</h2>
             <p>
         <Link to="/favorites">Naar favorietenpagina</Link> |{" "}
         <Link to="/admin">Inloggen als admin</Link>
       </p>
-      </p>
+      </div>
       <hr/>
 
 
       <h2>Zoeken en/of filteren van kaarten</h2>
       <p>Je kunt hier zoeken op namen of kaarteigenschappen. Ook kun je hier bepaalde series en/of kaartsoorten filteren, om het zoeken makkelijker te maken.</p>
-      <p></p>
+      <p>
       <SearchBar
         value={searchTerm}
         onChange={setSearchTerm}
         placeholder="Zoek op titel of bijv. 'power 5'"
       />
-
+      </p>
       <FiltersPanel
         seriesOptions={seriesOptions}
         selectedSeries={selectedSeries}

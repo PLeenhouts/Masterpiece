@@ -71,8 +71,10 @@ function App() {
   if (errorMsg) return <p style={{ color: "red" }}>{errorMsg}</p>;
 
 function getPublicImageUrl(path) {
-  const { data } = supabase.storage.from("card-images").getPublicUrl(path);
-  return data.publicUrl;
+  if (!path) return "";                 // <-- voorkomt null/undefined
+  const cleaned = String(path).replace(/^\/+/, "");
+  const { data } = supabase.storage.from("card-images").getPublicUrl(cleaned);
+  return data?.publicUrl ?? "";
 }
 
 async function handleToggleFavorite(id) {
@@ -136,33 +138,45 @@ async function handleRateCard(id, rating) {
   }
 }
 
+const toTextOrNull = (v) => {
+  const s = String(v ?? "").trim();
+  return s ? s : null;
+};
+
+const toNumberOrNull = (v) => {
+  const s = String(v ?? "").trim();
+  if (!s) return null;
+  const n = Number(s);
+  return Number.isFinite(n) ? n : null;
+};
+
 async function handleAddCard(formData) {
   const payload = {
-    title: formData.title.trim(),
-    serie: formData.serie?.trim() || null,
-    side: formData.side?.trim() || null,
-    type: formData.type?.trim() || null,
-    role: formData.role?.trim() || null,
-    rarity: formData.rarity?.trim() || null,
-    year: formData.year ? Number(formData.year) : null,
-    image: formData.image?.trim() || null,
-    description: formData.description?.trim() || null,
-    playtext: formData.playtext?.trim() || null,
-    roles: formData.roles ? formData.roles.split(",").map(r => r.trim()).filter(Boolean) : [],
-    power: formData.power?.trim() || null,
-    ability: formData.ability?.trim() || null,
-    rank: formData.rank?.trim() || null,
-    maneuver : formData.maneuver?.trim() || null,
-    armor : formData.armor?.trim() || null,
-    hyperspeed : formData.hyperspeed?.trim() || null,
-    landspeed : formData.landspeed?.trim() || null,
-    deploy: formData.deploy?.trim() || null,
-    forfeit: formData.forfeit?.trim() || null,
-    destiny: formData.destiny?.trim() || null,
-    forceiconsls: formData.forceiconsls?.trim() || null,
-    forceiconsds: formData.forceiconsds?.trim() || null,
-  };
-
+  title: String(formData.title ?? "").trim(),
+  serie: toTextOrNull(formData.serie),
+  side: toTextOrNull(formData.side),
+  type: toTextOrNull(formData.type),
+  role: toTextOrNull(formData.role),
+  rarity: toTextOrNull(formData.rarity),
+  year: toNumberOrNull(formData.year),
+  image: toTextOrNull(formData.image),
+  description: toTextOrNull(formData.description),
+  playtext: toTextOrNull(formData.playtext),
+  roles: formData.roles
+    ? String(formData.roles).split(",").map(r => r.trim()).filter(Boolean)
+    : [],
+  power: toNumberOrNull(formData.power),
+  ability: toNumberOrNull(formData.ability),
+  armor: toNumberOrNull(formData.armor),
+  maneuver: toNumberOrNull(formData.maneuver),
+  hyperspeed: toNumberOrNull(formData.hyperspeed),
+  landspeed: toNumberOrNull(formData.landspeed),
+  deploy: toNumberOrNull(formData.deploy),
+  forfeit: toNumberOrNull(formData.forfeit),
+  destiny: toNumberOrNull(formData.destiny),
+  forceiconsls: toNumberOrNull(formData.forceiconsls),
+  forceiconsds: toNumberOrNull(formData.forceiconsds),
+};
   const { data, error } = await supabase
     .from("cards")
     .insert(payload)
@@ -189,23 +203,31 @@ async function handleAddCard(formData) {
 
 async function handleUpdateCard(id, formData) {
   const payload = {
-    title: formData.title.trim(),
-    serie: formData.serie?.trim() || null,
-    side: formData.side?.trim() || null,
-    type: formData.type?.trim() || null,
-    role: formData.role?.trim() || null,
-    rarity: formData.rarity?.trim() || null,
-    year: formData.year ? Number(formData.year) : null,
-    image: formData.image?.trim() || null,
-    description: formData.description?.trim() || null,
-    playtext: formData.playtext?.trim() || null,
-    roles: formData.roles ? formData.roles.split(",").map(r => r.trim()).filter(Boolean) : [],
-    power: formData.power?.trim() || null,
-    ability: formData.ability?.trim() || null,
-    rank: formData.rank?.trim() || null,
-    deploy: formData.deploy?.trim() || null,
-    forfeit: formData.forfeit?.trim() || null,
-  };
+  title: String(formData.title ?? "").trim(),
+  serie: toTextOrNull(formData.serie),
+  side: toTextOrNull(formData.side),
+  type: toTextOrNull(formData.type),
+  role: toTextOrNull(formData.role),
+  rarity: toTextOrNull(formData.rarity),
+  year: toNumberOrNull(formData.year),
+  image: toTextOrNull(formData.image),
+  description: toTextOrNull(formData.description),
+  playtext: toTextOrNull(formData.playtext),
+  roles: formData.roles
+    ? String(formData.roles).split(",").map(r => r.trim()).filter(Boolean)
+    : [],
+  power: toNumberOrNull(formData.power),
+  ability: toNumberOrNull(formData.ability),
+  armor: toNumberOrNull(formData.armor),
+  maneuver: toNumberOrNull(formData.maneuver),
+  hyperspeed: toNumberOrNull(formData.hyperspeed),
+  landspeed: toNumberOrNull(formData.landspeed),
+  deploy: toNumberOrNull(formData.deploy),
+  forfeit: toNumberOrNull(formData.forfeit),
+  destiny: toNumberOrNull(formData.destiny),
+  forceiconsls: toNumberOrNull(formData.forceiconsls),
+  forceiconsds: toNumberOrNull(formData.forceiconsds),
+};
 
   const { data, error } = await supabase
     .from("cards")
