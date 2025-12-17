@@ -1,3 +1,9 @@
+/* Filter */
+.filters {
+  display: flex;
+  gap: 8px;
+}
+
 /* Grid */
 .card-grid {
   display: grid;
@@ -45,4 +51,26 @@ color: black;
 
 .rating .star.filled {
 color: gold;
+}
+
+/* Voorbeeldkaarten Admin */
+.admin-top{
+display: flex;
+}
+
+.admin-left{
+flex: 0 0 400px;
+}
+
+.admin-right{
+flex: 0 0 1450px;
+}
+
+.example-grid{
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.example-img{
+  width: 100%;
 }
